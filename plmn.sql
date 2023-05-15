@@ -28,7 +28,7 @@ INSERT INTO t_exercise_records (id, user_id, exercise_type, exercise_intensity, 
 INSERT INTO t_exercise_records (id, user_id, exercise_type, exercise_intensity, calories_burned, start_time, end_time) VALUES(4, 1, 'Walking', 'Low', 100.0, '2023-05-15 11:00:00', '2023-05-15 11:30:00');
 
 
-CREATE TABLE `t_food_ranking` (
+CREATE TABLE `t_food_value` (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '食物排行榜信息的唯一标识符，使用自增长的整数类型',
   `name` varchar(50)  NOT NULL COMMENT '食物名称，使用字符串类型，长度为50个字符',
   `nutrition_value` varchar(100)  NOT NULL COMMENT '食物的营养价值，使用字符串类型，长度为100个字符，包含食物富含的维生素、蛋白质、矿物质等信息',
@@ -37,16 +37,16 @@ CREATE TABLE `t_food_ranking` (
 )  COMMENT='食物价值表'
 
 
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(1, '苹果', '富含维生素C、膳食纤维、矿物质等', 52);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(2, '鸡胸肉', '富含蛋白质、低脂肪、低热量', 165);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(3, '三文鱼', '富含Omega-3脂肪酸、蛋白质、维生素D等', 206);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(4, '花生', '富含蛋白质、单不饱和脂肪酸、矿物质等', 567);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(5, '鸡蛋', '富含蛋白质、维生素D、矿物质等', 155);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(6, '杏仁', '富含维生素E、蛋白质、纤维等', 579);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(7, '黑巧克力', '富含抗氧化剂、镁、铁等', 546);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(8, '菠菜', '富含维生素K、维生素A、膳食纤维等', 23);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(9, '南瓜', '富含维生素A、膳食纤维、矿物质等', 26);
-INSERT INTO t_food_ranking(id, name, nutrition_value, calorie) VALUES(10, '西兰花', '富含维生素C、维生素K、膳食纤维等', 34);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(1, '苹果', '富含维生素C、膳食纤维、矿物质等', 52);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(2, '鸡胸肉', '富含蛋白质、低脂肪、低热量', 165);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(3, '三文鱼', '富含Omega-3脂肪酸、蛋白质、维生素D等', 206);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(4, '花生', '富含蛋白质、单不饱和脂肪酸、矿物质等', 567);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(5, '鸡蛋', '富含蛋白质、维生素D、矿物质等', 155);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(6, '杏仁', '富含维生素E、蛋白质、纤维等', 579);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(7, '黑巧克力', '富含抗氧化剂、镁、铁等', 546);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(8, '菠菜', '富含维生素K、维生素A、膳食纤维等', 23);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(9, '南瓜', '富含维生素A、膳食纤维、矿物质等', 26);
+INSERT INTO t_food_value(id, name, nutrition_value, calorie) VALUES(10, '西兰花', '富含维生素C、维生素K、膳食纤维等', 34);
 
 
 
