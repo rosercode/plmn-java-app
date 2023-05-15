@@ -1,5 +1,9 @@
 package cool.example.plmn.controller;
 
+import cool.example.plmn.ui.FoodValueFrame;
+import cool.example.plmn.ui.RecipeFrame;
+import cool.example.plmn.ui.UserFrame;
+
 import java.util.Scanner;
 
 /**
@@ -9,24 +13,23 @@ import java.util.Scanner;
 
 public class AdminController {
 
-    public AdminController() {
-    }
-
-
     public void start() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
+            displayMenu();
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
+                    new UserFrame().loop();
                     break;
                 case 2:
+                    new FoodValueFrame().loop();
                     break;
                 case 3:
+                    new RecipeFrame().loop();
                     break;
                 case 4:
-                    break;
-                case 5:
+                    System.out.println("退出管理员模块");
                     return;
                 default:
                     System.out.println("输入有误，请重新输入！");
@@ -34,19 +37,12 @@ public class AdminController {
             }
         }
     }
-
-    public void menu1(){
-        System.out.println("请选择操作：");
+    public void displayMenu(){
+        System.out.println("----- 用户管理 -----");
         System.out.println("1. 用户管理");
         System.out.println("2. 食物管理");
-        System.out.println("3. 建议管理");
+        System.out.println("3. 食谱管理");
         System.out.println("4. 退出");
-    }
-
-    public void userManage(){
-        System.out.println("1. 查询所有的用户");
-        System.out.println("2. 添加用户");
-        System.out.println("3. 删除用户");
-        System.out.println("4. 更新用户");
+        System.out.print("请选择操作：");
     }
 }

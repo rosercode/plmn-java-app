@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 
 /**
@@ -24,6 +26,8 @@ public class FoodValueFrame extends JFrame {
 
     private Integer selectedId;
     private FoodValueDao foodValueDao = FoodValueDao.getInstance();
+
+    public Boolean isClosed = false;
 
     String[] columnNames = {"ID", "name", "营养价值", "热量含量"};
 
@@ -91,7 +95,13 @@ public class FoodValueFrame extends JFrame {
         // 将按钮面板添加到窗口底部
         add(buttonPanel, BorderLayout.SOUTH);
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isClosed = true;
+            }
+        });
+
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -147,5 +157,18 @@ public class FoodValueFrame extends JFrame {
             data[i] = objects;
         }
         return data;
+    }
+
+    public void loop(){
+        while (true){
+            if (isClosed){
+                break;
+            }
+            try {
+                Thread.sleep(1*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

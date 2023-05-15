@@ -8,8 +8,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.sql.SQLException;
 
 /**
@@ -25,11 +24,12 @@ public class UserFrame extends JFrame {
     private Integer selectedId;
     private UserDao userDao = UserDao.getInstance();
 
+    public Boolean isClosed = false;
+
     String[] columnNames = {"ID", "username", "password", "role"};
 
     public UserFrame() {
         setTitle("用户管理");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
         tableInit();
@@ -92,6 +92,12 @@ public class UserFrame extends JFrame {
         // 将按钮面板添加到窗口底部
         add(buttonPanel, BorderLayout.SOUTH);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isClosed = true;
+            }
+        });
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -148,5 +154,18 @@ public class UserFrame extends JFrame {
             data[i] = objects;
         }
         return data;
+    }
+
+    public void loop(){
+        while (true){
+            if (isClosed){
+                break;
+            }
+            try {
+                Thread.sleep(1*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

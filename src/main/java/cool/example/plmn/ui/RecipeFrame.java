@@ -10,6 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.SQLException;
 
 /**
@@ -24,6 +26,8 @@ public class RecipeFrame extends JFrame{
 
     private Integer selectedId;
     private RecipeDao recipeDao = RecipeDao.getInstance();
+
+    public Boolean isClosed = false;
 
     String[] columnNames = {"ID", "食谱名称", "作者", "食谱适合的人数", "烹饪难度等级"};
 
@@ -108,6 +112,12 @@ public class RecipeFrame extends JFrame{
         // 将按钮面板添加到窗口底部
         add(buttonPanel, BorderLayout.SOUTH);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                isClosed = true;
+            }
+        });
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
         setLocationRelativeTo(null);
@@ -162,6 +172,17 @@ public class RecipeFrame extends JFrame{
         return data;
     }
 
+
+    public void loop(){
+        while (true){
+            if (isClosed){
+                break;
+            }
+            try {
+                Thread.sleep(1*1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
-
-
