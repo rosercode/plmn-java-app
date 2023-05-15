@@ -24,10 +24,8 @@ public class StatementProxy implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-
         if (targetStatement!=null){
-            if (method.getName().equals("executeQuery")) {
+            if (method.getName().equals("executeQuery") || method.getName().equals("executeUpdate")) {
                 // 在执行查询之前打印 SQL 语句
                 String sql = (String) args[0];
                 System.out.println("Executing SQL query: " + sql);
@@ -36,7 +34,7 @@ public class StatementProxy implements InvocationHandler {
             return method.invoke(targetStatement, args);
         }
         if (preparedTargetStatement!=null){
-            if (method.getName().equals("executeQuery")) {
+            if (method.getName().equals("executeQuery") || method.getName().equals("executeUpdate")) {
                 // 在执行查询之前打印 SQL 语句
                 String sql = preparedTargetStatement.toString(); // 获取完整的 SQL 语句
                 System.out.println("Executing SQL query: " + sql);
