@@ -1,5 +1,6 @@
 package cool.example.plmn;
 
+import cool.example.plmn.dao.UserDao;
 import org.junit.Test;
 
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ public class AppTest {
      * Rigorous Test :-)
      */
     @Test
-    public void shouldAnswerWithTrue() throws SQLException {
-
+    public void test1() throws SQLException {
+        System.out.println(UserDao.getInstance().selectAll());
     }
 }
