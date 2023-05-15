@@ -6,17 +6,25 @@ package cool.example.plmn.entity;
  * 对应的数据库表是 t_food_ranking
  */
 
-public class Food {
+public class FoodValue {
 
     private Integer id;
     private String name;
     private String nutritionValue;
     private int calorie;
 
-    public Food() {
+    public FoodValue() {
     }
 
-    public Food(String name, String nutritionValue, int calorie) {
+
+    public FoodValue(String name, String nutritionValue, int calorie) {
+        this.name = name;
+        this.nutritionValue = nutritionValue;
+        this.calorie = calorie;
+    }
+
+    public FoodValue(Integer id, String name, String nutritionValue, int calorie) {
+        this.id = id;
         this.name = name;
         this.nutritionValue = nutritionValue;
         this.calorie = calorie;
@@ -56,7 +64,7 @@ public class Food {
 
     @Override
     public String toString() {
-        return "Food{" +
+        return "FoodValue{" +
                 "name='" + name + '\'' +
                 ", nutritionValue='" + nutritionValue + '\'' +
                 ", calorie=" + calorie +
