@@ -6,7 +6,7 @@ package cool.example.plmn.entity;
  */
 
 public class Recipe {
-    private int recipeId;
+    private int id;
     private String recipeName;
     private String recipeDescription;
     private String author;
@@ -34,12 +34,12 @@ public class Recipe {
     }
 
     // Getters and Setters
-    public int getRecipeId() {
-        return recipeId;
+    public int getId() {
+        return id;
     }
 
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getRecipeName() {
@@ -117,7 +117,7 @@ public class Recipe {
     @Override
     public String toString() {
         return "Recipe{" +
-                "recipeId=" + recipeId +
+                "id=" + id +
                 ", recipeName='" + recipeName + '\'' +
                 ", recipeDescription='" + recipeDescription + '\'' +
                 ", author='" + author + '\'' +

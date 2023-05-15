@@ -33,51 +33,86 @@ public class RecipeDao {
     public void insert(Recipe recipe) {
         final String sql = "INSERT INTO t_recipes (recipe_name, recipe_description, author, prep_time, " +
                 "cooking_time, serving_size, difficulty, ingredients, instructions) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
-            pstmt.setString(1, recipe.getRecipeName());
-            pstmt.setString(2, recipe.getRecipeDescription());
-            pstmt.setString(3, recipe.getAuthor());
-            pstmt.setInt(4, recipe.getPrepTime());
-            pstmt.setInt(5, recipe.getCookingTime());
-            pstmt.setInt(6, recipe.getServingSize());
-            pstmt.setString(7, recipe.getDifficulty());
-            pstmt.setString(8, recipe.getIngredients());
-            pstmt.setString(9, recipe.getInstructions());
-
+            setRecipeParameters(pstmt, recipe);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public Recipe selectById(int id) throws SQLException {
+        String sql = "SELECT * FROM t_recipes WHERE id = ?";
+        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        statement.setInt(1, id);
+
+        ResultSet resultSet = statement.executeQuery();
+        if (resultSet.next()) {
+            return mapResultSetToRecipe(resultSet);
+        }
+        return null;
+    }
+
 
     // 获取所有食谱
     public List<Recipe> selectAll() {
-        final String sql = "SELECT * FROM recipes";
+        final String sql = "SELECT * FROM t_recipes";
         List<Recipe> recipes = new ArrayList<>();
         try (Statement stmt = JDBCUtils.createStatementProxy(conn.createStatement());
              ResultSet rs = stmt.executeQuery(sql)) {
-
             while (rs.next()) {
-                Recipe recipe = new Recipe();
-                recipe.setRecipeId(rs.getInt("recipe_id"));
-                recipe.setRecipeName(rs.getString("recipe_name"));
-                recipe.setRecipeDescription(rs.getString("recipe_description"));
-                recipe.setAuthor(rs.getString("author"));
-                recipe.setPrepTime(rs.getInt("prep_time"));
-                recipe.setCookingTime(rs.getInt("cooking_time"));
-                recipe.setServingSize(rs.getInt("serving_size"));
-                recipe.setDifficulty(rs.getString("difficulty"));
-                recipe.setIngredients(rs.getString("ingredients"));
-                recipe.setInstructions(rs.getString("instructions"));
-
-                recipes.add(recipe);
+                recipes.add(mapResultSetToRecipe(rs));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
         return recipes;
+    }
+
+    public void updateById(Recipe recipe) throws SQLException {
+        String sql = "UPDATE t_recipes SET recipe_name = ?, recipe_description = ?, author = ?, prep_time = ?," +
+                " cooking_time = ?, serving_size = ?, difficulty = ?, ingredients = ?, instructions = ? " +
+                "WHERE id = ?";
+        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        setRecipeParameters(statement, recipe);
+        statement.setInt(10, recipe.getId());
+        statement.executeUpdate();
+    }
+
+    private void setRecipeParameters(PreparedStatement statement, Recipe recipe) throws SQLException {
+        statement.setString(1, recipe.getRecipeName());
+        statement.setString(2, recipe.getRecipeDescription());
+        statement.setString(3, recipe.getAuthor());
+        statement.setInt(4, recipe.getPrepTime());
+        statement.setInt(5, recipe.getCookingTime());
+        statement.setInt(6, recipe.getServingSize());
+        statement.setString(7, recipe.getDifficulty());
+        statement.setString(8, recipe.getIngredients());
+        statement.setString(9, recipe.getInstructions());
+    }
+
+    public void deleteById(Integer id) throws SQLException {
+        String sql = "DELETE FROM t_recipes WHERE id = ?";
+        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
+    }
+
+    private Recipe mapResultSetToRecipe(ResultSet rs) throws SQLException {
+        Recipe recipe = new Recipe();
+        recipe.setId(rs.getInt("id"));
+        recipe.setRecipeName(rs.getString("recipe_name"));
+        recipe.setRecipeDescription(rs.getString("recipe_description"));
+        recipe.setAuthor(rs.getString("author"));
+        recipe.setPrepTime(rs.getInt("prep_time"));
+        recipe.setCookingTime(rs.getInt("cooking_time"));
+        recipe.setServingSize(rs.getInt("serving_size"));
+        recipe.setDifficulty(rs.getString("difficulty"));
+        recipe.setIngredients(rs.getString("ingredients"));
+        recipe.setInstructions(rs.getString("instructions"));
+        return recipe;
     }
 }
