@@ -33,16 +33,10 @@ public class ExerciseRecordsDao {
 
     // 创建新的运动消耗记录
     public void insertExerciseRecord(ExerciseRecords entity) throws SQLException {
-        String sql = "INSERT INTO ExerciseLogs (user_id, exercise_type, exercise_intensity, calories_burned, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO t_exercise_records (user_id, exercise_type, exercise_intensity, calories_burned, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
-            statement.setInt(1, entity.getUserId());
-            statement.setString(2, entity.getExerciseType());
-            statement.setString(3, entity.getExerciseIntensity());
-            statement.setFloat(4, entity.getCaloriesBurned());
-            statement.setDate(5, new java.sql.Date(entity.getStartTime().getTime()));
-            statement.setDate(6, new java.sql.Date(entity.getEndTime().getTime()));
-
+            setRecipeParameters(statement, entity);
             statement.executeUpdate();
         }
     }
@@ -70,8 +64,20 @@ public class ExerciseRecordsDao {
         String sql = "UPDATE t_exercise_records SET user_id = ?, exercise_type = ?, exercise_intensity = ?, calories_burned = ?, start_time = ?, end_time = ? WHERE id = ?";
 
         try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+            setRecipeParameters(statement, exerciseLog);
+            statement.setInt(7, exerciseLog.getId());
+
             statement.executeUpdate();
         }
+    }
+
+    public void setRecipeParameters(PreparedStatement statement, ExerciseRecords entity) throws SQLException {
+        statement.setInt(1, entity.getUserId());
+        statement.setString(2, entity.getExerciseType());
+        statement.setString(3, entity.getExerciseIntensity());
+        statement.setFloat(4, entity.getCaloriesBurned());
+        statement.setDate(5, new java.sql.Date(entity.getStartTime().getTime()));
+        statement.setDate(6, new java.sql.Date(entity.getEndTime().getTime()));
     }
 
     // 删除运动消耗记录
@@ -88,15 +94,26 @@ public class ExerciseRecordsDao {
     public List<ExerciseRecords> selectAll() throws SQLException {
         String sql = "SELECT * FROM t_exercise_records";
         List<ExerciseRecords> entities = new ArrayList<>();
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
-            try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    ExerciseRecords exerciseRecords = mapResultSetToExerciseLog(resultSet);
-                    entities.add(exerciseRecords);
-                }
-            }
+        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            ExerciseRecords exerciseRecords = mapResultSetToExerciseLog(resultSet);
+            entities.add(exerciseRecords);
         }
+        return entities;
+    }
 
+    // 获取指定用户的所有的运动消耗记录
+    public List<ExerciseRecords> selectAllByUserId(Integer userId) throws SQLException {
+        String sql = "SELECT * FROM t_exercise_records where user_id = ?";
+        List<ExerciseRecords> entities = new ArrayList<>();
+        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        statement.setInt(1, userId);
+        ResultSet resultSet = statement.executeQuery();
+        while (resultSet.next()) {
+            ExerciseRecords exerciseRecords = mapResultSetToExerciseLog(resultSet);
+            entities.add(exerciseRecords);
+        }
         return entities;
     }
 
