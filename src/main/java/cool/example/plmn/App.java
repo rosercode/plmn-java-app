@@ -18,6 +18,11 @@ public class App {
     // 当前登录用户
     public static User currentUser;
 
+    static {
+        currentUser = new User();
+        currentUser.setId(1);
+    }
+
     public static void main(String[] args)  {
         start();
     }
@@ -58,6 +63,5 @@ public class App {
         System.out.println("2. 注册");
         System.out.println("3. 退出");
         System.out.print("请选择操作：");
-
     }
 }

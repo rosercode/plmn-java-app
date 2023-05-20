@@ -6,6 +6,7 @@ import cool.example.plmn.utils.JDBCUtils;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 
 /**
@@ -46,14 +47,28 @@ public class WeightRecordDao {
         String sql = "SELECT * FROM t_weight_records WHERE id = ?";
         PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
         statement.setInt(1, id);
-
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            return new WeightRecord(resultSet.getInt("id"), resultSet.getTimestamp("record_time").toLocalDateTime(),
-                    resultSet.getInt("user_id"),resultSet.getDouble("weight"),  resultSet.getString("note"));
-        }
-        return null;
+        return selectOne(statement);
     }
+
+    // 要获取指定用户的最新一条记录
+    public WeightRecord selectLatestRecordByUserId(Integer userId) throws SQLException {
+        String sql = "SELECT * FROM t_weight_records WHERE user_id = ? ORDER BY record_time DESC LIMIT 1";
+        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        statement.setInt(1, userId);
+        return selectOne(statement);
+    }
+
+    public WeightRecord selectOne(PreparedStatement pstmt) throws SQLException {
+        WeightRecord entity = new WeightRecord();
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                return new WeightRecord(rs.getInt("id"), rs.getTimestamp("record_time").toLocalDateTime(),
+                        rs.getInt("user_id"), rs.getDouble("weight"), rs.getString("note"));
+            }
+        }
+        return entity;
+    }
+
 
     public List<WeightRecord> selectWeightRecordsByUserId(int userId) throws SQLException {
         final String sql = "SELECT * FROM t_weight_records WHERE user_id = ?";

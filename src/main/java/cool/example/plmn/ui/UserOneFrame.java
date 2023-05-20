@@ -13,7 +13,6 @@ import java.awt.*;
 
 public class UserOneFrame extends JFrame {
 
-    private static final long serialVersionUID = -1984182788841566838L;
     protected JPanel panelCenter, panelSouth;
     protected JButton saveButton, exitButton;
     protected JTextField usernameText, passwordText;
@@ -60,7 +59,6 @@ public class UserOneFrame extends JFrame {
         exitButton = new JButton("退出");
         exitButton.addActionListener(e -> {
             dispose();
-
         });
         panelSouth.add(exitButton);
 
