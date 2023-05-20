@@ -13,11 +13,10 @@ import java.time.format.DateTimeFormatter;
  * @date 2023/5/16 8:37
  */
 
-public class WeightRecordOneFrame extends JFrame {
+public class WeightRecordOneFrame extends BaseOneFrame {
 
 
-    protected JPanel panelCenter, panelSouth;
-    protected JButton saveButton, exitButton;
+
     protected JTextField recordTimeText, weightText, noteText;
 
     protected WeightRecord entity;
@@ -67,9 +66,8 @@ public class WeightRecordOneFrame extends JFrame {
         this.add(panelSouth, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setBounds(470, 200, 400, 270);
-        setResizable(false);
-        setVisible(true);
+        showFrame();
+
     }
 
 

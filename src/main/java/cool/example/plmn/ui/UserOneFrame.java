@@ -11,10 +11,8 @@ import java.awt.*;
  * @date 2023/5/16 1:03
  */
 
-public class UserOneFrame extends JFrame {
+public class UserOneFrame extends BaseOneFrame {
 
-    protected JPanel panelCenter, panelSouth;
-    protected JButton saveButton, exitButton;
     protected JTextField usernameText, passwordText;
 
     protected JComboBox<String> roleComboBox = new JComboBox<>(new String[]{
@@ -54,7 +52,6 @@ public class UserOneFrame extends JFrame {
         panelSouth.setLayout(new GridLayout(1, 2));
         saveButton = new JButton("保存");
 
-
         panelSouth.add(saveButton);
         exitButton = new JButton("退出");
         exitButton.addActionListener(e -> {
@@ -66,9 +63,7 @@ public class UserOneFrame extends JFrame {
         this.add(panelSouth, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setBounds(470, 200, 400, 270);
-        setResizable(false);
-        setVisible(true);
+        showFrame();
     }
 
 

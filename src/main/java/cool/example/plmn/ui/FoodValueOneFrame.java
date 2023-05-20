@@ -11,10 +11,8 @@ import java.awt.*;
  * @date 2023/5/16 2:44
  */
 
-public class FoodValueOneFrame extends JFrame {
+public class FoodValueOneFrame extends BaseOneFrame {
 
-    protected JPanel panelCenter, panelSouth;
-    protected JButton saveButton, exitButton;
     protected JTextField nameText, valueText, calorieText;
 
     protected FoodValue entity;
@@ -64,9 +62,7 @@ public class FoodValueOneFrame extends JFrame {
         this.add(panelSouth, BorderLayout.SOUTH);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setBounds(470, 200, 400, 270);
-        setResizable(false);
-        setVisible(true);
+        showFrame();
     }
 
 
