@@ -4,8 +4,6 @@ import cool.example.plmn.dao.UserDao;
 import cool.example.plmn.entity.User;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,23 +14,17 @@ import java.sql.SQLException;
  * @date 2023/5/16 1:03
  */
 
-public class UserFrame extends JFrame {
+public class UserMainFrame extends BaseMainFrame {
 
-    private JTable table;
     private JButton addButton, deleteButton, updateButton, flashButton;
 
-    private Integer selectedId;
     private UserDao userDao = UserDao.getInstance();
-
-    public Boolean isClosed = false;
 
     String[] columnNames = {"ID", "username", "password", "role"};
 
-    public UserFrame() {
+    public UserMainFrame() {
         setTitle("用户管理");
-        setLayout(new BorderLayout());
-
-        tableInit();
+        initTable();
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -55,7 +47,7 @@ public class UserFrame extends JFrame {
         // 处理删除按钮点击事件
         deleteButton.addActionListener(e -> {
             if (selectedId == null || selectedId == -1) {
-                JOptionPane.showMessageDialog(UserFrame.this,
+                JOptionPane.showMessageDialog(UserMainFrame.this,
                         "请选择行", "Fail", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -69,7 +61,7 @@ public class UserFrame extends JFrame {
         // 处理更新按钮点击事件
         updateButton.addActionListener(e -> {
             if (selectedId == null || selectedId == -1) {
-                JOptionPane.showMessageDialog(UserFrame.this,
+                JOptionPane.showMessageDialog(UserMainFrame.this,
                         "请选择行", "Fail", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -92,41 +84,13 @@ public class UserFrame extends JFrame {
         // 将按钮面板添加到窗口底部
         add(buttonPanel, BorderLayout.SOUTH);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                isClosed = true;
-            }
-        });
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        showFrame();
     }
 
-    public void tableInit() {
+    public void initTable() {
         // 创建表格模型和数据
         DefaultTableModel model = new DefaultTableModel(getTableData(), columnNames);
-        table = new JTable(model) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        // 创建表格选择模型并添加行选择监听器
-        ListSelectionModel selectionModel = table.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = table.getSelectedRow();
-                    if (selectedRow != -1) {
-                        selectedId = (Integer) table.getValueAt(selectedRow, 0);
-                    }
-                }
-            }
-        });
+        table.setModel(model);
     }
 
     // 更新表格内容
@@ -154,18 +118,5 @@ public class UserFrame extends JFrame {
             data[i] = objects;
         }
         return data;
-    }
-
-    public void loop(){
-        while (true){
-            if (isClosed){
-                break;
-            }
-            try {
-                Thread.sleep(1*1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

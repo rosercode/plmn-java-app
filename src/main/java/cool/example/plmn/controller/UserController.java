@@ -6,8 +6,8 @@ import cool.example.plmn.dao.WeightAdviceDao;
 import cool.example.plmn.dao.WeightRecordDao;
 import cool.example.plmn.entity.WeightAdvice;
 import cool.example.plmn.entity.WeightRecord;
-import cool.example.plmn.ui.ExerciseRecordsFrame;
-import cool.example.plmn.ui.WeightRecordFrame;
+import cool.example.plmn.ui.ExerciseRecordsMainFrame;
+import cool.example.plmn.ui.WeightRecordMainFrame;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -48,10 +48,10 @@ public class UserController {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    new WeightRecordFrame().loop();
+                    new WeightRecordMainFrame().loop();
                     break;
                 case 2:
-                    new ExerciseRecordsFrame().loop();
+                    new ExerciseRecordsMainFrame().loop();
                     break;
                 case 3:
                     return;

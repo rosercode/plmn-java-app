@@ -1,41 +1,33 @@
 package cool.example.plmn.ui;
 
-import cool.example.plmn.dao.FoodValueDao;
-import cool.example.plmn.entity.FoodValue;
+import cool.example.plmn.App;
+import cool.example.plmn.dao.WeightRecordDao;
+import cool.example.plmn.entity.WeightRecord;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.sql.SQLException;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author wangshuo
- * @date 2023/5/16 2:45
+ * @date 2023/5/16 5:11
  */
 
-public class FoodValueFrame extends JFrame {
-
-    private JTable table;
+public class WeightRecordMainFrame extends BaseMainFrame {
+   
     private JButton addButton, deleteButton, updateButton, flashButton;
+    
+    private WeightRecordDao weightRecordDao = WeightRecordDao.getInstance();
 
-    private Integer selectedId;
-    private FoodValueDao foodValueDao = FoodValueDao.getInstance();
+    String[] columnNames = {"ID", "记录时间", "体重", "备注"};
 
-    public Boolean isClosed = false;
-
-    String[] columnNames = {"ID", "name", "营养价值", "热量含量"};
-
-    public FoodValueFrame() {
-        setTitle("食物价值信息");
-        setLayout(new BorderLayout());
-
-        tableInit();
+    public WeightRecordMainFrame() {
+        setTitle("体重记录信息");
+        initTable();
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
 
@@ -51,19 +43,19 @@ public class FoodValueFrame extends JFrame {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new FoodValueAddFrame();
+                new WeightRecordAddFrame();
             }
         });
 
         // 处理删除按钮点击事件
         deleteButton.addActionListener(e -> {
             if (selectedId == null || selectedId == -1) {
-                JOptionPane.showMessageDialog(FoodValueFrame.this,
+                JOptionPane.showMessageDialog(WeightRecordMainFrame.this,
                         "请选择行", "Fail", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
-                foodValueDao.deleteById(selectedId);
+                weightRecordDao.deleteById(selectedId);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -72,12 +64,12 @@ public class FoodValueFrame extends JFrame {
         // 处理更新按钮点击事件
         updateButton.addActionListener(e -> {
             if (selectedId == null || selectedId == -1) {
-                JOptionPane.showMessageDialog(FoodValueFrame.this,
+                JOptionPane.showMessageDialog(WeightRecordMainFrame.this,
                         "请选择行", "Fail", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
-                new FoodValueUpdateFrame(foodValueDao.findById(selectedId));
+                new WeightRecordUpdateFrame(weightRecordDao.selectById(selectedId));
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
@@ -95,42 +87,13 @@ public class FoodValueFrame extends JFrame {
         // 将按钮面板添加到窗口底部
         add(buttonPanel, BorderLayout.SOUTH);
 
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                isClosed = true;
-            }
-        });
-
-        pack();
-        setLocationRelativeTo(null);
-        setVisible(true);
+        showFrame();
     }
 
-    public void tableInit() {
+    public void initTable() {
         // 创建表格模型和数据
         DefaultTableModel model = new DefaultTableModel(getTableData(), columnNames);
-        table = new JTable(model) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-
-        // 创建表格选择模型并添加行选择监听器
-        ListSelectionModel selectionModel = table.getSelectionModel();
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        selectionModel.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting()) {
-                    int selectedRow = table.getSelectedRow();
-                    if (selectedRow != -1) {
-                        selectedId = (Integer) table.getValueAt(selectedRow, 0);
-                    }
-                }
-            }
-        });
+        table.setModel(model);
     }
 
     // 更新表格内容
@@ -139,36 +102,22 @@ public class FoodValueFrame extends JFrame {
         model.setDataVector(data, columnNames);
     }
 
-
     public Object[][] getTableData() {
-        java.util.List<FoodValue> entities = null;
+        java.util.List<WeightRecord> entities = null;
         try {
-            entities = foodValueDao.selectAll();
+            entities = weightRecordDao.selectWeightRecordsByUserId(App.currentUser.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
         assert entities != null;
         Object[][] data = new Object[entities.size()][];
         for (int i = 0; i < entities.size(); i++) {
-            FoodValue entity = entities.get(i);
+            WeightRecord entity = entities.get(i);
             Object[] objects = new Object[]{
-                    entity.getId(), entity.getName(), entity.getNutritionValue(), entity.getCalorie()
+                    entity.getId(), entity.getRecordTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), entity.getWeight(), entity.getNote()
             };
             data[i] = objects;
         }
         return data;
-    }
-
-    public void loop(){
-        while (true){
-            if (isClosed){
-                break;
-            }
-            try {
-                Thread.sleep(1*1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

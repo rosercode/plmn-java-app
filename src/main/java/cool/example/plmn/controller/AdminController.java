@@ -1,8 +1,8 @@
 package cool.example.plmn.controller;
 
-import cool.example.plmn.ui.FoodValueFrame;
-import cool.example.plmn.ui.RecipeFrame;
-import cool.example.plmn.ui.UserFrame;
+import cool.example.plmn.ui.FoodValueMainFrame;
+import cool.example.plmn.ui.RecipeMainFrame;
+import cool.example.plmn.ui.UserMainFrame;
 
 import java.util.Scanner;
 
@@ -20,13 +20,13 @@ public class AdminController {
             int choice = scanner.nextInt();
             switch (choice) {
                 case 1:
-                    new UserFrame().loop();
+                    new UserMainFrame().loop();
                     break;
                 case 2:
-                    new FoodValueFrame().loop();
+                    new FoodValueMainFrame().loop();
                     break;
                 case 3:
-                    new RecipeFrame().loop();
+                    new RecipeMainFrame().loop();
                     break;
                 case 4:
                     System.out.println("退出管理员模块");
