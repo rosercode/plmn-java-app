@@ -36,7 +36,7 @@ public class FoodValueDao {
     public void insert(FoodValue foodValue) throws SQLException {
         String sql = "INSERT INTO t_food_value (name, nutrition_value, calorie) VALUES (?, ?, ?)";
 
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, foodValue.getName());
             stmt.setString(2, foodValue.getNutritionValue());
             stmt.setInt(3, foodValue.getCalorie());
@@ -47,7 +47,7 @@ public class FoodValueDao {
     // 根据食物名称查询食物记录
     public FoodValue findByName(String name) throws SQLException {
         String sql = "SELECT * FROM t_food_value WHERE name = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, name);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -62,7 +62,7 @@ public class FoodValueDao {
     // 根据食物 id查询食物记录
     public FoodValue findById(Integer id) throws SQLException {
         String sql = "SELECT * FROM t_food_value WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -77,7 +77,7 @@ public class FoodValueDao {
     // 查询所有食物记录
     public List<FoodValue> selectAll() throws SQLException {
         String sql = "SELECT * FROM t_food_value";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql)); ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql); ResultSet rs = stmt.executeQuery()) {
             List<FoodValue> foodValues = new ArrayList<>();
             while (rs.next()) {
                 foodValues.add(new FoodValue(rs.getInt("id"), rs.getString("name"), rs.getString("nutrition_value"), rs.getInt("calorie")));
@@ -89,7 +89,7 @@ public class FoodValueDao {
     // 更新食物记录
     public void update(FoodValue foodValue) throws SQLException {
         String sql = "UPDATE t_food_value SET name = ?, nutrition_value = ?, calorie = ? WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, foodValue.getName());
             stmt.setString(2, foodValue.getNutritionValue());
             stmt.setInt(3, foodValue.getCalorie());
@@ -101,7 +101,7 @@ public class FoodValueDao {
     // 根据食物名称删除食物记录
     public void deleteByName(String name) throws SQLException {
         String sql = "DELETE FROM t_food_value WHERE name = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, name);
             stmt.executeUpdate();
         }
@@ -110,7 +110,7 @@ public class FoodValueDao {
     // 根据食物id删除食物记录
     public void deleteById(Integer id) throws SQLException {
         String sql = "DELETE FROM t_food_value WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }

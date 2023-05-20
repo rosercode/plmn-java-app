@@ -159,7 +159,11 @@ public class RecipeFrame extends JFrame{
 
     public Object[][] getTableData() {
         java.util.List<Recipe> entities = null;
-        entities = recipeDao.selectAll();
+        try {
+            entities = recipeDao.selectAll();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         assert entities != null;
         Object[][] data = new Object[entities.size()][];
         for (int i = 0; i < entities.size(); i++) {

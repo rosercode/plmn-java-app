@@ -35,7 +35,7 @@ public class ExerciseRecordsDao {
     public void insertExerciseRecord(ExerciseRecords entity) throws SQLException {
         String sql = "INSERT INTO t_exercise_records (user_id, exercise_type, exercise_intensity, calories_burned, start_time, end_time) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             setRecipeParameters(statement, entity);
             statement.executeUpdate();
         }
@@ -46,7 +46,7 @@ public class ExerciseRecordsDao {
         String sql = "SELECT * FROM t_exercise_records WHERE id = ?";
         ExerciseRecords exerciseLog = null;
 
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             statement.setInt(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -63,7 +63,7 @@ public class ExerciseRecordsDao {
     public void updateExerciseLog(ExerciseRecords exerciseLog) throws SQLException {
         String sql = "UPDATE t_exercise_records SET user_id = ?, exercise_type = ?, exercise_intensity = ?, calories_burned = ?, start_time = ?, end_time = ? WHERE id = ?";
 
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             setRecipeParameters(statement, exerciseLog);
             statement.setInt(7, exerciseLog.getId());
 
@@ -84,7 +84,7 @@ public class ExerciseRecordsDao {
     public void deleteExerciseLog(int id) throws SQLException {
         String sql = "DELETE FROM t_exercise_records WHERE id = ?";
 
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -94,7 +94,7 @@ public class ExerciseRecordsDao {
     public List<ExerciseRecords> selectAll() throws SQLException {
         String sql = "SELECT * FROM t_exercise_records";
         List<ExerciseRecords> entities = new ArrayList<>();
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {
             ExerciseRecords exerciseRecords = mapResultSetToExerciseLog(resultSet);
@@ -107,7 +107,7 @@ public class ExerciseRecordsDao {
     public List<ExerciseRecords> selectAllByUserId(Integer userId) throws SQLException {
         String sql = "SELECT * FROM t_exercise_records where user_id = ?";
         List<ExerciseRecords> entities = new ArrayList<>();
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setInt(1, userId);
         ResultSet resultSet = statement.executeQuery();
         while (resultSet.next()) {

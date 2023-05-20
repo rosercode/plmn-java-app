@@ -34,7 +34,7 @@ public class RecipeDao {
         final String sql = "INSERT INTO t_recipes (recipe_name, recipe_description, author, prep_time, " +
                 "cooking_time, serving_size, difficulty, ingredients, instructions) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement pstmt = JDBCUtils.prepareStatement(conn, sql)) {
             setRecipeParameters(pstmt, recipe);
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -44,7 +44,7 @@ public class RecipeDao {
 
     public Recipe selectById(int id) throws SQLException {
         String sql = "SELECT * FROM t_recipes WHERE id = ?";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setInt(1, id);
 
         ResultSet resultSet = statement.executeQuery();
@@ -56,10 +56,10 @@ public class RecipeDao {
 
 
     // 获取所有食谱
-    public List<Recipe> selectAll() {
+    public List<Recipe> selectAll() throws SQLException {
         final String sql = "SELECT * FROM t_recipes";
         List<Recipe> recipes = new ArrayList<>();
-        try (Statement stmt = JDBCUtils.createStatementProxy(conn.createStatement());
+        try (Statement stmt = JDBCUtils.prepareStatement(conn, sql);
              ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 recipes.add(mapResultSetToRecipe(rs));
@@ -75,7 +75,7 @@ public class RecipeDao {
         String sql = "UPDATE t_recipes SET recipe_name = ?, recipe_description = ?, author = ?, prep_time = ?," +
                 " cooking_time = ?, serving_size = ?, difficulty = ?, ingredients = ?, instructions = ? " +
                 "WHERE id = ?";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         setRecipeParameters(statement, recipe);
         statement.setInt(10, recipe.getId());
         statement.executeUpdate();
@@ -95,7 +95,7 @@ public class RecipeDao {
 
     public void deleteById(Integer id) throws SQLException {
         String sql = "DELETE FROM t_recipes WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }

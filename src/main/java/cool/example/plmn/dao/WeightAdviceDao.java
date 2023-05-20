@@ -32,7 +32,7 @@ public class WeightAdviceDao {
 
     public void insert(WeightAdvice weightAdvice) {
         final String sql = "INSERT INTO t_weight_advice (min_weight, max_weight, advice) VALUES (?, ?, ?)";
-        try (PreparedStatement ps = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement ps = JDBCUtils.prepareStatement(conn, sql)) {
             ps.setDouble(1, weightAdvice.getMinWeight());
             ps.setDouble(2, weightAdvice.getMaxWeight());
             ps.setString(3, weightAdvice.getAdvice());
@@ -44,7 +44,7 @@ public class WeightAdviceDao {
 
     public WeightAdvice findByWeight(double weight) {
         final String sql = "SELECT advice FROM t_weight_advice WHERE ? >= min_weight AND ? <= max_weight";
-        try (PreparedStatement ps = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement ps = JDBCUtils.prepareStatement(conn, sql)) {
             ps.setDouble(1, weight);
             ps.setDouble(2, weight);
             try (ResultSet rs = ps.executeQuery()) {

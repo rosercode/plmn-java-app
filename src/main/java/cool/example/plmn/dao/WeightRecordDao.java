@@ -34,7 +34,7 @@ public class WeightRecordDao {
 
     public void insertWeightRecord(WeightRecord record) throws SQLException {
         final String sql = "INSERT INTO t_weight_records (record_time, user_id, weight, note) VALUES (?, ?, ?, ?)";
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             statement.setTimestamp(1, Timestamp.valueOf(record.getRecordTime()));
             statement.setInt(2, record.getUserId());
             statement.setDouble(3, record.getWeight());
@@ -45,7 +45,7 @@ public class WeightRecordDao {
 
     public WeightRecord selectById(Integer id) throws SQLException {
         String sql = "SELECT * FROM t_weight_records WHERE id = ?";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setInt(1, id);
         return selectOne(statement);
     }
@@ -53,7 +53,7 @@ public class WeightRecordDao {
     // 要获取指定用户的最新一条记录
     public WeightRecord selectLatestRecordByUserId(Integer userId) throws SQLException {
         String sql = "SELECT * FROM t_weight_records WHERE user_id = ? ORDER BY record_time DESC LIMIT 1";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setInt(1, userId);
         return selectOne(statement);
     }
@@ -73,7 +73,7 @@ public class WeightRecordDao {
     public List<WeightRecord> selectWeightRecordsByUserId(int userId) throws SQLException {
         final String sql = "SELECT * FROM t_weight_records WHERE user_id = ?";
         List<WeightRecord> records = new ArrayList<>();
-        try (PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql)) {
             statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
@@ -92,7 +92,7 @@ public class WeightRecordDao {
     public void updateById(WeightRecord entity) throws SQLException {
         String sql = "UPDATE t_weight_records SET record_time = ?, user_id = ?, weight = ?," +
                 " note = ? WHERE id = ?";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setObject(1, entity.getRecordTime());
         statement.setInt(2, entity.getUserId());
         statement.setDouble(3, entity.getWeight());
@@ -103,7 +103,7 @@ public class WeightRecordDao {
 
     public void deleteById(Integer id) throws SQLException {
         String sql = "DELETE FROM t_weight_records WHERE id = ?";
-        PreparedStatement statement = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement statement = JDBCUtils.prepareStatement(conn, sql);
         statement.setInt(1, id);
         statement.executeUpdate();
     }

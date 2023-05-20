@@ -35,7 +35,7 @@ public class UserDao {
     // 插入新用户
     public void insertUser(User entity) throws SQLException {
         final String sql = "INSERT INTO t_users (username, password, role) VALUES (?, ?, ?)";
-        PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql));
+        PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql);
         stmt.setString(1, entity.getUsername());
         stmt.setString(2, entity.getPassword());
         stmt.setInt(3, entity.getRole());
@@ -46,7 +46,7 @@ public class UserDao {
     public List<User> selectAll() throws SQLException {
         final String sql = "SELECT * FROM t_users";
         List<User> users = new ArrayList<>();
-        PreparedStatement stmt = JDBCUtils.createStatementProxy((conn.prepareStatement(sql)));
+        PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql);
         ResultSet rs = stmt.executeQuery();
         while (rs.next()) {
             int id = rs.getInt("id");
@@ -67,7 +67,7 @@ public class UserDao {
     public User selectUserByAll(String queryUsername, String queryPassword, Integer queryRole) throws SQLException {
         final String sql = "SELECT * FROM t_users WHERE username = ? and password = ? and role = ?";
         User user = null;
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, queryUsername);
             stmt.setString(2, queryPassword);
             stmt.setInt(3, queryRole);
@@ -84,7 +84,7 @@ public class UserDao {
     public User getUserById(int id) throws SQLException {
         final String sql = "SELECT * FROM t_users WHERE id = ?";
         User user = null;
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
@@ -101,7 +101,7 @@ public class UserDao {
     // 根据 ID 删除用户
     public void deleteUserById(int id) throws SQLException {
         final String sql = "DELETE FROM t_users WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }
@@ -110,7 +110,7 @@ public class UserDao {
     // 更新用户信息
     public void update(User user) throws SQLException {
         final String sql = "UPDATE t_users SET username = ?, password = ?, role = ? WHERE id = ?";
-        try (PreparedStatement stmt = JDBCUtils.createStatementProxy(conn.prepareStatement(sql))) {
+        try (PreparedStatement stmt = JDBCUtils.prepareStatement(conn, sql)) {
             stmt.setString(1, user.getUsername());
             stmt.setString(2, user.getPassword());
             stmt.setInt(3, user.getRole());

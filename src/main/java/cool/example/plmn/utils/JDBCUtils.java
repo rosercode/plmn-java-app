@@ -76,5 +76,9 @@ public class JDBCUtils {
 
         return proxy;
     }
+
+    public static PreparedStatement prepareStatement(Connection conn, String sql) throws SQLException {
+        return createStatementProxy(conn.prepareStatement(sql));
+    }
 }
 
